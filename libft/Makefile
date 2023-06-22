@@ -6,13 +6,14 @@
 #    By: motroian <motroian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 17:13:25 by motroian          #+#    #+#              #
-#    Updated: 2023/02/17 18:16:22 by motroian         ###   ########.fr        #
+#    Updated: 2023/06/22 22:14:00 by motroian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS =	ft_atoi.c \
 		ft_isalpha.c \
 		ft_isalnum.c \
+		ft_isspace.c \
 		ft_isascii.c \
 		ft_isdigit.c \
 		ft_isprint.c \

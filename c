@@ -1,0 +1,10 @@
+a
+b
+c
+include
+libft
+libft.a
+Makefile
+minishell
+srcs
+suppressions.txt

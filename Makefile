@@ -1,4 +1,4 @@
-SRCS = $(addprefix srcs/, main.c bonus_pipex_utils.c here_doc.c bonus_pipex.c bonus_utils.c)
+SRCS = $(addprefix exec/, main.c bonus_pipex_utils.c here_docs.c bonus_pipex.c bonus_utils.c)
 
 NAME = minishell
 
@@ -13,7 +13,7 @@ LIBFT = libft.a
 ${NAME} : ${OBJS} ${LIBFT}
 			make -C libft/ all
 			mv libft/libft.a ./
-			cc ${FLAGS} ${INC} $(OBJS) -o $(NAME) libft.a
+			cc ${FLAGS} ${INC} $(OBJS) -o $(NAME) libft.a -lreadline
 
 ${LIBFT}:
 	make -C libft/ all
@@ -23,6 +23,9 @@ all : ${NAME}
 
 %.o:%.c
 		cc ${FLAGS} ${INC}  -c $< -o $@
+
+leaks: $(NAME)
+	valgrind --suppressions=suppressions.txt --leak-check=full --show-leak-kinds=all --track-fds=yes   ./minishell
 
 clean :
 		make -C ./libft/ clean

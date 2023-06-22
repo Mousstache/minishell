@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 15:47:03 by motroian          #+#    #+#             */
-/*   Updated: 2023/02/17 18:16:59 by motroian         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:13:41 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int					ft_isdigit(int nb);
 int					ft_isalnum(int nb);
 int					ft_isascii(int nb);
 int					ft_isprint(int nb);
+int					ft_isspace(int nb);
+
 
 // mem
 void				*ft_memset(void *s, int c, size_t n);

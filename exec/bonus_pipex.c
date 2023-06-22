@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_pipex.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/05/26 18:44:23 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/06/22 23:39:44 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	exec(t_data *data, t_cmd *cmd, char **env)
 		execve(cmd->cmd, cmd->arg, env);
 	else
 	{
-		// data->path = path_finder(env);
+		data->path = path_finder(env);
 		while (data->path[++i])
 		{
 			line = ft_strjoin(data->path[i], "/");
@@ -38,7 +38,19 @@ void	exec(t_data *data, t_cmd *cmd, char **env)
 	}
 	ft_printf("bash: %s: command not found\n", cmd->cmd);
 	free_all(cmd->tab);
+	free(cmd->arg);
 	error_free_exit(data);
+}
+
+int		get_pipe(t_data *data, char *file)
+{
+	for (int i = 0; i < data->nbhere; i++)
+	{
+		fprintf(stderr, "{%s} [%s]\n", file, data->here[i].delim);
+		if (!ft_strcmp(file, data->here[i].delim))
+			return (data->here[i].fd[0]);
+	}
+	return (-1);
 }
 
 void	openfiles(t_data *data, t_cmd *cmd)
@@ -49,19 +61,29 @@ void	openfiles(t_data *data, t_cmd *cmd)
 	i = -1;
 	while (cmd->files[++i])
 	{
+		// printf("[[[%s]]]->{%i}\n", cmd->files[i], cmd->redir[i]);
 		if (cmd->redir[i] == 1)
 			fd = open(cmd->files[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		if (cmd->redir[i] == 2)
 			fd = open(cmd->files[i], O_WRONLY | O_CREAT | O_APPEND, 0666);
 		if (cmd->redir[i] == 3)
 			fd = open(cmd->files[i], O_RDONLY , 0666);
+		if (cmd->redir[i] == 4)
+			fd = get_pipe(data, cmd->files[i]);
 		if (fd == -1)
 			error_free_exit(data);
 		if (cmd->redir[i] == 1 || cmd->redir[i] == 2)
 			dup_close(fd, STDOUT_FILENO);
-		if (cmd->redir[i] == 3)
+		else if (cmd->redir[i] == 3)
 			dup_close(fd, STDIN_FILENO);
+		else if (cmd->redir[i] == 4)
+			dup2(fd, STDIN_FILENO);
 	}
+	for (int i = 0; i < data->nbhere; i++)
+		close(data->here[i].fd[0]);
+	free_heredoc(data);
+	free(cmd->files);
+	free(cmd->redir);
 }
 
 void	forking(t_data *data, int i, t_cmd *cmd)
@@ -73,11 +95,6 @@ void	forking(t_data *data, int i, t_cmd *cmd)
 	ft_close(data);
 	openfiles(data, cmd);
 }
-// < Makefile
-// ls -R
-// ls > out -R
-// sdfsdf
-// {<}{infile1}{<}{infile2}{ls}{>}{outfile1}{-R}{>>}{append1}{-a}{<}{infile3}{-l}{>}{out}{-R}
 
 int	isaredirection(char *str)
 {
@@ -92,14 +109,33 @@ int	isaredirection(char *str)
 	return (0);
 }
 
+void	ft_compt(char **tab, t_cmd *cmd)
+{
+	int i = -1;
+	int k = 0;
+	int p = 0;
+
+	while (tab[++i])
+	{
+		if (!isaredirection(tab[i]))
+			k++;
+		else
+			p++;
+	}
+	cmd->arg = calloc(sizeof(char *), k + 1);
+	cmd->files = calloc(sizeof(char *), p + 1);
+	cmd->redir = calloc(sizeof(int), p + 1);
+}
+
 t_cmd	parse(char *str)
 {
-	t_cmd	cmd;
+	static t_cmd	cmd = {0};
 	
 	cmd.tab = ft_split(str, ' ');
 	int i = -1;
 	int k = 0;
 	int p = 0;
+	ft_compt(cmd.tab, &cmd);
 	while (cmd.tab[++i])
 	{
 		if (!isaredirection(cmd.tab[i]))
@@ -113,8 +149,6 @@ t_cmd	parse(char *str)
 		}
 	}
 	cmd.cmd = cmd.arg[0];
-	cmd.arg[k] = NULL;
-	cmd.files[p] = NULL;
 	return (cmd);
 }
 
@@ -127,25 +161,31 @@ void	process(t_data *data, char **av)
 	while (++i < data->nbcmd)
 	{
 		pipe(data->fd);
+		signal(SIGINT, SIG_IGN);
 		data->pid[i] = fork();
 		if (data->pid[i] < 0)
 			error_free_exit(data);
 		else if (data->pid[i] == 0)
 		{
+			signal(SIGINT, &ctrlc);
 			cmd = parse(av[i]);
 			forking(data, i, & cmd);
+			if (!cmd.cmd)
+				exit(0) ;
 			exec(data, & cmd, data->env);
 		}
 		else
 		{
-			safe_close(data->fd[1]);
+			close(data->fd[1]);
 			if (data->prev_pipe != -1)
-				safe_close(data->prev_pipe);
+				close(data->prev_pipe);
 			data->prev_pipe = data->fd[0];
+			signal(SIGQUIT, SIG_IGN);
 		}
 	}
-	safe_close(data->fd[0]);
+	close(data->fd[0]);
 	waiting(data);
+	signal(SIGINT, &ctrlc);
 }
 
 void	init(t_data *data, char **env)
@@ -154,18 +194,27 @@ void	init(t_data *data, char **env)
 	data->prev_pipe = -1;
 	data->fd[0] = -1;
 	data->fd[1] = -1;
-	data->path = path_finder(env);
+	// data->path = path_finder(env);
 	data->pid = malloc(sizeof(int) * data->nbcmd);
 	if (!data->pid)
 		exit (1);
 }
+t_data	*starton(void)
+{
+	static t_data	data;
+
+	return (&data);
+}
 
 int	main(int ac, char **av, char **env)
 {
-	static t_data	data = {0};
+	t_data	*data;
 	char	*input;
 	if (ac != 1)
 		return 1;
+	data = starton();
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &ctrlc);
 	(void)av;
 	while (1)
 	{
@@ -177,17 +226,18 @@ int	main(int ac, char **av, char **env)
 			free(input);
 			continue ;
 		}
-		data.nbcmd = ft_strtab(input, '|');
 		add_history(input);
-		init(& data, env);
-		data.tab = ft_split(input, '|');
-		printf("%i\n", data.nbcmd);
-		// (void)tab;
-		process(& data, data.tab);
-		// close(data.fd[0]);
-		free_all(data.path);
-		free_all(data.tab);
-		free(data.pid);
-		
+		data->nbcmd = ft_strtab(input, '|');
+		if (here_doc(data, input))
+			continue ;
+		init(data, env);
+		data->tab = ft_split(input, '|');
+		process(data, data->tab);
+		free_all(data->path);
+		free_all(data->tab);
+		free(data->pid);
+		for (int i = 0; i < data->nbhere; i++)
+			close(data->here[i].fd[0]);
+		free_heredoc(data);
 	}
 }
