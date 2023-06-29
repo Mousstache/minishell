@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/06/22 23:39:44 by motroian         ###   ########.fr       */
+/*   Updated: 2023/06/26 23:29:01 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,27 @@ t_data	*starton(void)
 	static t_data	data;
 
 	return (&data);
+}
+// echo $USER
+// calcule de la longeur de la nouvelle string 
+// calloc
+// remplissage
+
+char *catch_expand(char *str)
+{
+	int		i;
+	char	*env_var;
+	
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$')
+		{
+			while (!ft_isspace(str[i]))
+				i++;
+		}
+		i++;
+	}
 }
 
 int	main(int ac, char **av, char **env)

@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 22:02:25 by motroian          #+#    #+#             */
-/*   Updated: 2023/06/22 23:38:26 by motroian         ###   ########.fr       */
+/*   Updated: 2023/06/26 23:10:24 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,21 @@ char	*getmot(char *str)
 void	*delims(t_here *hd, char *str, int max)
 {
 	int i = 0;
-	int j = 0;
+	int j = 0;// cat << ok
+	printf("str : %s\n", str);
 	while (j < max)
 	{
 		while (ft_isspace(str[i]))
 			i++;
-		while (str[i] != '<' && str[i + 1] != '<')
+		while (str[i] != '<') // && str[i + 1] != '<')
 			i++;
+		if (str[++i] != '<')
+			continue ;
 		i++;
 		i++;
+		while (ft_isspace(str[i]))
+			i++;
+		printf("boucle : %s\n", &str[i]);
 		while (ft_isspace(str[i]))
 			i++;
 		hd[j].delim = getmot(&str[i]);
@@ -144,7 +150,7 @@ bool	here_doc(t_data *data, char *str)
 	data->nbhere = count_hd(str);
 	if (!data->nbhere)
 		return (false);
-	printf("nb here = %i\n", data->nbhere);
+	// printf("nb here = %i\n", data->nbhere);
 	data->here = ft_calloc(sizeof(t_here), data->nbhere);
 	if (!data->here)
 		return (true);
@@ -162,8 +168,8 @@ bool	here_doc(t_data *data, char *str)
 		for (int i = 0; i < data->nbhere; i++)
 			close(data->here[i].fd[1]);
 	}
-	signal(SIGINT, &ctrlc);
 	wait(NULL);
+	signal(SIGINT, &ctrlc);
 	printf("bool = %i\n", data->stop);
 	return (data->stop);
 }
