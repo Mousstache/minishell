@@ -55,14 +55,17 @@ void	ft_printtab(char **tab);
 char	**path_finder(char **env);
 void	dup_close(int fd, int fd2);
 bool	here_doc(t_data *data, char *str);
+int		isaredirection(char *str);
 void	free_heredoc(t_data *data);
-
 void	message(t_data *data);
 void	waiting(t_data *data);
 void	ft_close(t_data *data);
 void	last_cmd(t_data *data, char **av);
 t_data	*starton(void);
 void	ctrlc(int sig);
+
+char *addspace(char *str);
+
 
 
 

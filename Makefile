@@ -1,4 +1,4 @@
-SRCS = $(addprefix exec/, main.c bonus_pipex_utils.c here_docs.c bonus_pipex.c bonus_utils.c)
+SRCS = $(addprefix exec/, main.c bonus_pipex_utils.c here_docs.c bonus_pipex.c bonus_utils.c addspace.c)
 
 NAME = minishell
 

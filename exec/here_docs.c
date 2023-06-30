@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 22:02:25 by motroian          #+#    #+#             */
-/*   Updated: 2023/06/26 23:10:24 by motroian         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:02:46 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void	child_process_hd(t_data *data, t_here *here, char *input)
 	}
 	free(input);
 	free_heredoc(data);
-	exit(1);
+	exit(0);
 }
 
 bool	here_doc(t_data *data, char *str)

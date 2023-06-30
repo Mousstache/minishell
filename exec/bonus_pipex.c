@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/06/26 23:29:01 by motroian         ###   ########.fr       */
+/*   Updated: 2023/06/30 20:19:12 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,22 +210,22 @@ t_data	*starton(void)
 // calloc
 // remplissage
 
-char *catch_expand(char *str)
-{
-	int		i;
-	char	*env_var;
+// char *catch_expand(char *str)
+// {
+// 	int		i;
+// 	char	*env_var;
 	
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$')
-		{
-			while (!ft_isspace(str[i]))
-				i++;
-		}
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '$')
+// 		{
+// 			while (!ft_isspace(str[i]))
+// 				i++;
+// 		}
+// 		i++;
+// 	}
+// }
 
 int	main(int ac, char **av, char **env)
 {
@@ -237,6 +237,7 @@ int	main(int ac, char **av, char **env)
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &ctrlc);
 	(void)av;
+	(void)env;
 	while (1)
 	{
 		input = readline("moussa>");
@@ -248,17 +249,18 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		add_history(input);
-		data->nbcmd = ft_strtab(input, '|');
-		if (here_doc(data, input))
-			continue ;
-		init(data, env);
-		data->tab = ft_split(input, '|');
-		process(data, data->tab);
-		free_all(data->path);
-		free_all(data->tab);
-		free(data->pid);
-		for (int i = 0; i < data->nbhere; i++)
-			close(data->here[i].fd[0]);
-		free_heredoc(data);
+		input = addspace(input);
+		// data->nbcmd = ft_strtab(input, '|');
+		// if (here_doc(data, input))
+		// 	continue ;
+		// init(data, env);
+		// data->tab = ft_split(input, '|');
+		// process(data, data->tab);
+		// free_all(data->path);
+		// free_all(data->tab);
+		// free(data->pid);
+		// for (int i = 0; i < data->nbhere; i++)
+		// 	close(data->here[i].fd[0]);
+		// free_heredoc(data);
 	}
 }
