@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 17:46:47 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/03 20:14:37 by motroian         ###   ########.fr       */
+/*   Updated: 2023/07/04 17:41:35 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,5 +90,6 @@ char *addspace(char *str)
 	printf("%d\n", ft_plus(str));
 	free(str);
 	// final = ft_clear(final);
+	printf("fin ==%s\n", final);
 	return (final);
 }

@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/06/30 20:19:12 by motroian         ###   ########.fr       */
+/*   Updated: 2023/07/04 17:41:54 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,17 +250,17 @@ int	main(int ac, char **av, char **env)
 		}
 		add_history(input);
 		input = addspace(input);
-		// data->nbcmd = ft_strtab(input, '|');
-		// if (here_doc(data, input))
-		// 	continue ;
-		// init(data, env);
-		// data->tab = ft_split(input, '|');
-		// process(data, data->tab);
-		// free_all(data->path);
-		// free_all(data->tab);
-		// free(data->pid);
-		// for (int i = 0; i < data->nbhere; i++)
-		// 	close(data->here[i].fd[0]);
-		// free_heredoc(data);
+		data->nbcmd = ft_strtab(input, '|');
+		if (here_doc(data, input))
+			continue ;
+		init(data, env);
+		data->tab = ft_split(input, '|');
+		process(data, data->tab);
+		free_all(data->path);
+		free_all(data->tab);
+		free(data->pid);
+		for (int i = 0; i < data->nbhere; i++)
+			close(data->here[i].fd[0]);
+		free_heredoc(data);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 22:02:25 by motroian          #+#    #+#             */
-/*   Updated: 2023/06/30 20:02:46 by motroian         ###   ########.fr       */
+/*   Updated: 2023/07/04 18:49:13 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void	free_heredoc(t_data *data)
 	}
 }
 
-// << hello asd sab ccb |B DF<D>S >FDF << world << c
-
 int		lenmot(char *str)
 {
 	int i = 0;
@@ -64,21 +62,18 @@ char	*getmot(char *str)
 void	*delims(t_here *hd, char *str, int max)
 {
 	int i = 0;
-	int j = 0;// cat << ok
-	printf("str : %s\n", str);
+	int j = 0;
 	while (j < max)
 	{
 		while (ft_isspace(str[i]))
 			i++;
-		while (str[i] != '<') // && str[i + 1] != '<')
+		while (str[i] != '<')
 			i++;
 		if (str[++i] != '<')
 			continue ;
 		i++;
-		i++;
 		while (ft_isspace(str[i]))
 			i++;
-		printf("boucle : %s\n", &str[i]);
 		while (ft_isspace(str[i]))
 			i++;
 		hd[j].delim = getmot(&str[i]);
@@ -147,16 +142,16 @@ void	child_process_hd(t_data *data, t_here *here, char *input)
 
 bool	here_doc(t_data *data, char *str)
 {
+	int	i;
+
+	i = -1;
 	data->nbhere = count_hd(str);
 	if (!data->nbhere)
 		return (false);
-	// printf("nb here = %i\n", data->nbhere);
 	data->here = ft_calloc(sizeof(t_here), data->nbhere);
 	if (!data->here)
 		return (true);
 	delims(data->here, str, data->nbhere);
-	for (int i = 0; i < data->nbhere; i++)
-		printf("%i->[%s]\n", i, data->here[i].delim);
 	signal(SIGINT, SIG_IGN);
 	int pid = fork();
 	if (pid == 0)
@@ -165,11 +160,11 @@ bool	here_doc(t_data *data, char *str)
 	}
 	else if (pid > 0)
 	{
-		for (int i = 0; i < data->nbhere; i++)
+		while (++i < data->nbhere)
 			close(data->here[i].fd[1]);
 	}
 	wait(NULL);
 	signal(SIGINT, &ctrlc);
-	printf("bool = %i\n", data->stop);
+	// printf("bool = %i\n", data->stop);
 	return (data->stop);
 }
