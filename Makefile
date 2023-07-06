@@ -1,5 +1,6 @@
-SRCS = $(addprefix exec/, main.c bonus_pipex_utils.c here_docs.c bonus_pipex.c bonus_utils.c addspace.c) \
-		$(addprefix builtin/, echo.c) \
+SRCS = $(addprefix exec/, main.c minishell_utils.c here_docs.c minishell.c minishell_utils_2.c addspace.c) \
+		$(addprefix parsing/, valid.c) \
+		#$(addprefix builtin/, echo.c) \
 
 NAME = minishell
 
@@ -39,3 +40,7 @@ fclean : clean
 re : fclean all
 
 .PHONY : all  clean fclean re libft NAME 
+
+
+
+

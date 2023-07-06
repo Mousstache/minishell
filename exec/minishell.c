@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus_pipex.c                                      :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/04 17:41:54 by motroian         ###   ########.fr       */
+/*   Updated: 2023/07/06 23:41:12 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ void	exec(t_data *data, t_cmd *cmd, char **env)
 		}
 	}
 	ft_printf("bash: %s: command not found\n", cmd->cmd);
-	free_all(cmd->tab);
-	free(cmd->arg);
-	error_free_exit(data);
 }
 
 int		get_pipe(t_data *data, char *file)
@@ -148,9 +145,15 @@ t_cmd	parse(char *str)
 			cmd.files[p++] = cmd.tab[++i];
 		}
 	}
+	printf ("nombres redir %d\n", p);
 	cmd.cmd = cmd.arg[0];
 	return (cmd);
 }
+
+// int	is_builtin(char **arg, char **env)
+// {
+
+// }
 
 void	process(t_data *data, char **av)
 {
@@ -172,7 +175,12 @@ void	process(t_data *data, char **av)
 			forking(data, i, & cmd);
 			if (!cmd.cmd)
 				exit(0) ;
-			exec(data, & cmd, data->env);
+			if (!is_builtin(cmd.arg, data->env))
+				exec(data, & cmd, data->env);
+			free_all(cmd.tab);
+			free(cmd.arg);
+			error_free_exit(data);
+			// free et exit
 		}
 		else
 		{
@@ -249,18 +257,19 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		add_history(input);
-		input = addspace(input);
-		data->nbcmd = ft_strtab(input, '|');
-		if (here_doc(data, input))
-			continue ;
-		init(data, env);
-		data->tab = ft_split(input, '|');
-		process(data, data->tab);
-		free_all(data->path);
-		free_all(data->tab);
-		free(data->pid);
-		for (int i = 0; i < data->nbhere; i++)
-			close(data->here[i].fd[0]);
-		free_heredoc(data);
+		printf("%d\n", quotes(input));
+		// input = addspace(input);
+		// data->nbcmd = ft_strtab(input, '|');
+		// if (here_doc(data, input))
+		// 	continue ;
+		// init(data, env);
+		// data->tab = ft_split(input, '|');
+		// process(data, data->tab);
+		// free_all(data->path);
+		// free_all(data->tab);
+		// free(data->pid);
+		// for (int i = 0; i < data->nbhere; i++)
+		// 	close(data->here[i].fd[0]);
+		// free_heredoc(data);
 	}
 }

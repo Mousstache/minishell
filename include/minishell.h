@@ -33,7 +33,6 @@ typedef struct s_data
 	int		*pid;
 	char	**tab;
 	int		fd[2];
-
 	t_here	*here;
 	int		nbhere;
 	bool	stop;
@@ -63,8 +62,9 @@ void	ft_close(t_data *data);
 void	last_cmd(t_data *data, char **av);
 t_data	*starton(void);
 void	ctrlc(int sig);
-
-char *addspace(char *str);
+int		quotes(char *str);
+int		syntax(char *str);
+char	*addspace(char *str);
 
 
 
