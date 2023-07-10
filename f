@@ -1,0 +1,12 @@
+a.out
+builtin
+exec
+f
+include
+libft
+libft.a
+Makefile
+minishell
+parsing
+suppressions.txt
+test.c

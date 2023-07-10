@@ -64,7 +64,9 @@ t_data	*starton(void);
 void	ctrlc(int sig);
 int		quotes(char *str);
 int		syntax(char *str);
+char	*negatif(char *str);
 char	*addspace(char *str);
+int		syntax(char *str);
 
 
 

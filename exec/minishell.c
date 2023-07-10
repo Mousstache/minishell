@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/06 23:41:12 by motroian         ###   ########.fr       */
+/*   Updated: 2023/07/10 18:14:50 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ void	exec(t_data *data, t_cmd *cmd, char **env)
 		}
 	}
 	ft_printf("bash: %s: command not found\n", cmd->cmd);
+		// free_all(cmd->tab);
+		// free(cmd->arg);
+		// error_free_exit(data);
 }
 
 int		get_pipe(t_data *data, char *file)
@@ -173,13 +176,13 @@ void	process(t_data *data, char **av)
 			signal(SIGINT, &ctrlc);
 			cmd = parse(av[i]);
 			forking(data, i, & cmd);
-			if (!cmd.cmd)
-				exit(0) ;
-			if (!is_builtin(cmd.arg, data->env))
+			// if (!cmd.cmd)
+			// 	exit(0) ;
+			// if (!is_builtin(cmd.arg, data->env))
 				exec(data, & cmd, data->env);
-			free_all(cmd.tab);
-			free(cmd.arg);
-			error_free_exit(data);
+			// free_all(cmd.tab);
+			// free(cmd.arg);
+			// error_free_exit(data);
 			// free et exit
 		}
 		else
@@ -257,7 +260,9 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		add_history(input);
-		printf("%d\n", quotes(input));
+		// printf("%d\n", quotes(input));
+		// printf("%s\n", negatif(input));
+		printf("%d\n", syntax(input));
 		// input = addspace(input);
 		// data->nbcmd = ft_strtab(input, '|');
 		// if (here_doc(data, input))
