@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus_pipex_utils.c                                :+:      :+:    :+:   */
+/*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 21:39:02 by motroian          #+#    #+#             */
-/*   Updated: 2023/05/30 18:37:02 by motroian         ###   ########.fr       */
+/*   Updated: 2023/07/31 22:56:31 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,4 @@ void	dup_close(int fd, int fd2)
 {
 	dup2(fd, fd2);
 	close(fd);
-}
-
-void	message(t_data *data)
-{
-	perror("bash");
-	error_free_exit(data);
 }

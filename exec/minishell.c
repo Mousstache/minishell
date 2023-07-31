@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/10 18:14:50 by motroian         ###   ########.fr       */
+/*   Updated: 2023/07/31 23:23:49 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,46 +44,15 @@ void	exec(t_data *data, t_cmd *cmd, char **env)
 
 int		get_pipe(t_data *data, char *file)
 {
-	for (int i = 0; i < data->nbhere; i++)
+	int	i;
+
+	i = -1;
+	while (++i < data->nbhere)
 	{
-		fprintf(stderr, "{%s} [%s]\n", file, data->here[i].delim);
 		if (!ft_strcmp(file, data->here[i].delim))
 			return (data->here[i].fd[0]);
 	}
 	return (-1);
-}
-
-void	openfiles(t_data *data, t_cmd *cmd)
-{
-	int	i;
-	int	fd;
-
-	i = -1;
-	while (cmd->files[++i])
-	{
-		// printf("[[[%s]]]->{%i}\n", cmd->files[i], cmd->redir[i]);
-		if (cmd->redir[i] == 1)
-			fd = open(cmd->files[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		if (cmd->redir[i] == 2)
-			fd = open(cmd->files[i], O_WRONLY | O_CREAT | O_APPEND, 0666);
-		if (cmd->redir[i] == 3)
-			fd = open(cmd->files[i], O_RDONLY , 0666);
-		if (cmd->redir[i] == 4)
-			fd = get_pipe(data, cmd->files[i]);
-		if (fd == -1)
-			error_free_exit(data);
-		if (cmd->redir[i] == 1 || cmd->redir[i] == 2)
-			dup_close(fd, STDOUT_FILENO);
-		else if (cmd->redir[i] == 3)
-			dup_close(fd, STDIN_FILENO);
-		else if (cmd->redir[i] == 4)
-			dup2(fd, STDIN_FILENO);
-	}
-	for (int i = 0; i < data->nbhere; i++)
-		close(data->here[i].fd[0]);
-	free_heredoc(data);
-	free(cmd->files);
-	free(cmd->redir);
 }
 
 void	forking(t_data *data, int i, t_cmd *cmd)
@@ -96,71 +65,24 @@ void	forking(t_data *data, int i, t_cmd *cmd)
 	openfiles(data, cmd);
 }
 
-int	isaredirection(char *str)
+void	parent(t_data *data, int i, char **av)
 {
-	if (!ft_strcmp(str, ">"))
-		return (1);
-	if (!ft_strcmp(str, ">>"))
-		return (2);
-	if (!ft_strcmp(str, "<"))
-		return (3);
-	if (!ft_strcmp(str, "<<"))
-		return (4);
-	return (0);
+	t_cmd	cmd;
+
+	signal(SIGINT, &ctrlc);
+	cmd = parse(av[i]);
+	forking(data, i, & cmd);
+	if (!cmd.cmd)
+		exit(0);
+	if (!ex_builtin(cmd.arg, data->env))
+		exec(data, & cmd, data->env);
+	free_all(cmd.tab);
+	free(cmd.arg);
+	error_free_exit(data);
 }
-
-void	ft_compt(char **tab, t_cmd *cmd)
-{
-	int i = -1;
-	int k = 0;
-	int p = 0;
-
-	while (tab[++i])
-	{
-		if (!isaredirection(tab[i]))
-			k++;
-		else
-			p++;
-	}
-	cmd->arg = calloc(sizeof(char *), k + 1);
-	cmd->files = calloc(sizeof(char *), p + 1);
-	cmd->redir = calloc(sizeof(int), p + 1);
-}
-
-t_cmd	parse(char *str)
-{
-	static t_cmd	cmd = {0};
-	
-	cmd.tab = ft_split(str, ' ');
-	int i = -1;
-	int k = 0;
-	int p = 0;
-	ft_compt(cmd.tab, &cmd);
-	while (cmd.tab[++i])
-	{
-		if (!isaredirection(cmd.tab[i]))
-		{
-			cmd.arg[k++] = cmd.tab[i];
-		}
-		else
-		{
-			cmd.redir[p] = isaredirection(cmd.tab[i]);
-			cmd.files[p++] = cmd.tab[++i];
-		}
-	}
-	printf ("nombres redir %d\n", p);
-	cmd.cmd = cmd.arg[0];
-	return (cmd);
-}
-
-// int	is_builtin(char **arg, char **env)
-// {
-
-// }
 
 void	process(t_data *data, char **av)
 {
-	t_cmd	cmd;
 	int	i;
 
 	i = -1;
@@ -172,19 +94,7 @@ void	process(t_data *data, char **av)
 		if (data->pid[i] < 0)
 			error_free_exit(data);
 		else if (data->pid[i] == 0)
-		{
-			signal(SIGINT, &ctrlc);
-			cmd = parse(av[i]);
-			forking(data, i, & cmd);
-			// if (!cmd.cmd)
-			// 	exit(0) ;
-			// if (!is_builtin(cmd.arg, data->env))
-				exec(data, & cmd, data->env);
-			// free_all(cmd.tab);
-			// free(cmd.arg);
-			// error_free_exit(data);
-			// free et exit
-		}
+			parent(data, i, av);
 		else
 		{
 			close(data->fd[1]);
@@ -199,44 +109,6 @@ void	process(t_data *data, char **av)
 	signal(SIGINT, &ctrlc);
 }
 
-void	init(t_data *data, char **env)
-{
-	data->env = env;
-	data->prev_pipe = -1;
-	data->fd[0] = -1;
-	data->fd[1] = -1;
-	// data->path = path_finder(env);
-	data->pid = malloc(sizeof(int) * data->nbcmd);
-	if (!data->pid)
-		exit (1);
-}
-t_data	*starton(void)
-{
-	static t_data	data;
-
-	return (&data);
-}
-// echo $USER
-// calcule de la longeur de la nouvelle string 
-// calloc
-// remplissage
-
-// char *catch_expand(char *str)
-// {
-// 	int		i;
-// 	char	*env_var;
-	
-// 	i = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] == '$')
-// 		{
-// 			while (!ft_isspace(str[i]))
-// 				i++;
-// 		}
-// 		i++;
-// 	}
-// }
 
 int	main(int ac, char **av, char **env)
 {
@@ -251,7 +123,7 @@ int	main(int ac, char **av, char **env)
 	(void)env;
 	while (1)
 	{
-		input = readline("moussa>");
+		input = readline("moussa> ");
 		if (!input)
 			break ;
 		if (!*input)
@@ -260,9 +132,17 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		add_history(input);
-		// printf("%d\n", quotes(input));
+		// if (quotes(input))
+		// 	(printf("ko\n"));
+		// else
+		// 	negatif(input);
+		// if (syntax(input))
+		// 	printf ("syntax error\n");
+		printf("%d\n", quotes(input));
 		// printf("%s\n", negatif(input));
-		printf("%d\n", syntax(input));
+		// printf("%s\n", syntax(input) == 1 ? "syntax error !" : "ok");
+		// printf("%s\n", is_builtin());
+		// static char *tab[3] = {"echo", "lol", NULL};
 		// input = addspace(input);
 		// data->nbcmd = ft_strtab(input, '|');
 		// if (here_doc(data, input))

@@ -1,21 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 18:55:40 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/05 21:28:03 by motroian         ###   ########.fr       */
+/*   Updated: 2023/07/31 22:14:04 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <limits.h>
-
+#include "minishell.h"
 
 int	is_opt(char *str)
 {
@@ -62,14 +57,16 @@ int	ft_echo(char **tab, char **env)
 	}
 	if (verif != 1)
 		printf("\n");
+	return (0);
 }
 
 int	ft_pwd(char **tab, char **env)
 {
 	char	path[PATH_MAX];
 
-	getcwd(path, PATH_MAX);
-	if (path == NULL)
+	(void)env;
+	(void)tab;
+	if (getcwd(path, PATH_MAX) == NULL)
 		return (printf("error\n"), 1);
 	printf("%s\n", path);
 	return (0);
@@ -79,28 +76,32 @@ int	ft_cd(char **tab, char **env)
 {
 	char *str;
 
-	if (tab[1])
-		return (fprintf(stderr, "trop d'arguments\n"), 1);
-	if (strcmp(tab[0], "~/"))
+	(void)env;
+	if (!tab[0])
 	{
 		dprintf(2, "waf\n");
 		str = getenv("HOME");
+		fprintf(stderr, "{{%s}}\n", str);
 		if (!str)
 			return (perror(tab[0]) , 1);
 		chdir(str);
+		return (0);
 	}
+	if (tab[1])
+		return (fprintf(stderr, "trop d'arguments\n"), 1);
 	if (chdir(tab[0]) == -1)
 		return (perror(tab[0]) , 1);
-	// pas oublier de changer le $PWD de l'env
+	return (0);
 }
 
-int main(int ac, char **av, char **env)
-{
-	// if (ac < 2)
-		// return 1;
-	// ft_echo(++av, env);
-	ft_pwd(av, env);
-	ft_cd(av + 1, env);
-	// printf("%i %s\n", chdir("~/"), av[1]);
-	ft_pwd(av, env);
-}
+// int main(int ac, char **av, char **env)
+// {
+// 	static char *tab[3] = {"aa", NULL};
+// 	// if (ac < 2)
+// 		// return 1;
+// 	// ft_echo(++av, env);
+// 	ft_pwd(av, env);
+// 	ft_cd(tab, env);
+// 	// printf("%i %s\n", chdir("~/"), av[1]);
+// 	ft_pwd(av, env);
+// }

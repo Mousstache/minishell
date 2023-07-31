@@ -47,6 +47,29 @@ typedef struct s_cmd
 	char	**files;
 }	t_cmd;
 
+typedef struct s_env
+{
+	char **env_copy;
+	char *var_name;
+	char *var_value;
+}	t_env;
+
+// env
+int is_alphanum(char c);
+int count_string(char **env);
+void    free_all(char **tab);
+int is_alpha(char c);
+int count_in_var(char *str);
+int	ex_builtin(char **arg, char **env);
+int count_var_len(char *str);
+
+// builtin
+char	**ft_unset(char **env, char *variable);
+int		ft_cd(char **tab, char **env);
+int		ft_echo(char **tab, char **env);
+int		ft_pwd(char **tab, char **env);
+void    ft_env(char **str);
+
 void	free_all(char **tab);
 char	*ft_gnl(int fd, int boolean);
 void	error_free_exit(t_data *data);
@@ -67,8 +90,12 @@ int		syntax(char *str);
 char	*negatif(char *str);
 char	*addspace(char *str);
 int		syntax(char *str);
-
-
+t_cmd	parse(char *str);
+int		is_builtin(char **arg, char **env);
+void	init(t_data *data, char **env);
+void	openfiles(t_data *data, t_cmd *cmd);
+int		get_pipe(t_data *data, char *file);
+void	ft_compt(char **tab, t_cmd *cmd);
 
 
 #endif
