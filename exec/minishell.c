@@ -6,28 +6,27 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/03 22:24:26 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/03 23:50:32 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_strtab(char *str, char c);
 
-int	ft_nofork(t_data *data, t_cmd *cmd, char **env)
-{
-	free(data->pid);
-	data->fddup[0] = dup(STDOUT_FILENO);
-	data->fddup[1] = dup(STDIN_FILENO);
-	if (!openfile(data, cmd))
-	{
-		ft_is_builtin(cmd, env);
-		dupclose(data->fddup);
-		return (0);
-	}
-	dupclose(data->fddup);
-	return (0);
-}
+// int	ft_nofork(t_data *data, t_cmd *cmd, char **env)
+// {
+// 	free(data->pid);
+// 	data->fddup[0] = dup(STDOUT_FILENO);
+// 	data->fddup[1] = dup(STDIN_FILENO);
+// 	if (!openfile(data, cmd))
+// 	{
+// 		ft_is_builtin(cmd, env);
+// 		dupclose(data->fddup);
+// 		return (0);
+// 	}
+// 	dupclose(data->fddup);
+// 	return (0);
+// }
 
 void	exec(t_data *data, t_cmd *cmd, char **env)
 {
@@ -85,12 +84,13 @@ void	parent(t_data *data, int i, char **av)
 	t_cmd	cmd;
 
 	signal(SIGINT, &ctrlc);
+	negatif(av[i]);
 	cmd = parse(av[i]);
 	forking(data, i, & cmd);
 	if (!cmd.cmd)
 		exit(0);
-	if (!ex_builtin(cmd.arg, data->env))
-		exec(data, & cmd, data->env);
+	if (!ex_builtin(cmd.arg, data->envi))
+		exec(data, & cmd, data->envi);
 	free_all(cmd.tab);
 	free(cmd.arg);
 	error_free_exit(data);
@@ -101,8 +101,8 @@ void	process(t_data *data, char **av)
 	int	i;
 
 	i = -1;
-	if (data->nbcmd == 1 && get_cmd(data))
-		return (ft_nofork(data, data->onecmd, env), NULL);
+	// if (data->nbcmd == 1 && get_cmd(data))
+	// 	return (ft_nofork(data, data->onecmd, env), NULL);
 	while (++i < data->nbcmd)
 	{
 		pipe(data->fd);
@@ -124,53 +124,4 @@ void	process(t_data *data, char **av)
 	close(data->fd[0]);
 	waiting(data);
 	signal(SIGINT, &ctrlc);
-}
-
-
-int	main(int ac, char **av, char **env)
-{
-	t_data	*data;
-	char	*input;
-	if (ac != 1)
-		return 1;
-	data = starton();
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, &ctrlc);
-	(void)av;
-	(void)env;
-	while (1)
-	{
-		input = readline("moussa> ");
-		if (!input)
-			break ;
-		if (!*input)
-		{
-			free(input);
-			continue ;
-		}
-		add_history(input);
-		if (quotes(input))
-			(printf("ko\n"));
-		else
-			negatif(input);
-		if (syntax(input))
-			printf ("syntax error\n");
-		negatif(input);
-		printf("%d\n", quotes(input));
-		printf("%s\n", input);
-		printf("%s\n", syntax(input) == 1 ? "syntax error !" : "ok");
-		input = addspace(input);
-		data->nbcmd = ft_strtab(input, '|');
-		if (here_doc(data, input))
-			continue ;
-		init(data, env);
-		data->tab = ft_split(input, '|');
-		process(data, data->tab);
-		free_all(data->path);
-		free_all(data->tab);
-		free(data->pid);
-		for (int i = 0; i < data->nbhere; i++)
-			close(data->here[i].fd[0]);
-		free_heredoc(data);
-	}
 }

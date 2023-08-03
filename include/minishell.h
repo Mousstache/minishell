@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 22:30:43 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/03 22:55:06 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/03 23:49:59 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,17 @@ typedef struct s_here
 	int		fd[2];
 }	t_here;
 
+typedef struct s_env
+{
+	char	**env_copy;
+	char	*var_name;
+	char	*var_value;
+}	t_env;
+
 typedef struct s_data
 {
 	char	**path;
-	char	**env;
+	char	**envi;
 	char	**cmd;
 	int		nbcmd;
 	int		outfile;
@@ -45,9 +52,10 @@ typedef struct s_data
 	int		*pid;
 	char	**tab;
 	int		fd[2];
-	int		fddup[2];
+	// int		fddup[2];
 	t_here	*here;
-	t_cmd	*onecmd;
+	// t_cmd	*onecmd;
+	t_env	*env;
 	int		nbhere;
 	bool	stop;
 	int		bool_s;
@@ -63,12 +71,6 @@ typedef struct s_cmd
 	char	**files;
 }	t_cmd;
 
-typedef struct s_env
-{
-	char	**env_copy;
-	char	*var_name;
-	char	*var_value;
-}	t_env;
 
 // env
 int		is_alphanum(char c);
@@ -77,6 +79,9 @@ void	free_all(char **tab);
 int		is_alpha(char c);
 int		count_in_var(char *str);
 int		ex_builtin(char **arg, char **env);
+char	*ft_expand(char *str, t_env *env);
+char	**create_env(char **env);
+char	*ft_strjoin2(char *s1, char *s2);
 int		count_var_len(char *str);
 
 // builtin
@@ -93,6 +98,8 @@ void	free_heredoc(t_data *data);
 bool	here_doc(t_data *data, char *str);
 
 //exec
+int	ft_strtab(char *str, char c);
+void	process(t_data *data, char **av);
 void	free_all(char **tab);
 char	*ft_gnl(int fd, int boolean);
 void	error_free_exit(t_data *data);

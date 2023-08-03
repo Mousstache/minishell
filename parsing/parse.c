@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 20:56:41 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/02 23:19:46 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/03 23:51:30 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,13 @@ t_cmd	parse(char *str)
 			cmd.files[p++] = cmd.tab[++i];
 		}
 	}
-	printf ("nombres redir %d\n", p);
 	cmd.cmd = cmd.arg[0];
 	return (cmd);
 }
 
 void	init(t_data *data, char **env)
 {
-	data->env = env;
+	data->envi = env;
 	data->prev_pipe = -1;
 	data->fd[0] = -1;
 	data->fd[1] = -1;
