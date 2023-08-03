@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 19:46:00 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/31 22:52:24 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/03 21:52:35 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int	ex_builtin(char **arg, char **env)
 {
 	(void)env;
 	char	*cmd = arg[0];
-	static char	*tab[8] = {"cd", "echo", "pwd", NULL};
-	static func fonction[7] = {ft_cd, ft_echo, ft_pwd};
+	static char	*tab[5] = {"cd", "echo", "pwd", NULL};
+	static func fonction[4] = {ft_cd, ft_echo, ft_pwd};
 	int i;
 
 	i = -1;
@@ -45,7 +45,7 @@ int	ex_builtin(char **arg, char **env)
 		if (!ft_strcmp(cmd , tab[i]))
 		{
 			fonction[i](++arg, env);
-			fprintf(stderr, "j'exec %s \n", tab[i]);
+			// fprintf(stderr, "j'exec %s \n", tab[i]);
 			return (1);
 		}
 	}

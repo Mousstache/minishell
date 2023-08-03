@@ -1,4 +1,4 @@
-SRCS = $(addprefix exec/, main.c minishell_utils.c here_docs.c minishell.c minishell_utils_2.c addspace.c exec_utils.c) \
+SRCS = $(addprefix exec/, main.c minishell_utils.c here_docs.c minishell.c minishell_utils_2.c addspace.c exec_utils.c here_docs2.c )\
 		$(addprefix parsing/, valid.c parse.c) \
 		$(addprefix builtin/, builtin.c is_builtin.c ) \
 

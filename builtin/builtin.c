@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 18:55:40 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/31 22:14:04 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/03 22:01:50 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	is_opt(char *str)
 					return (0);
 				i++;
 			}
-			printf("option trouvee\n");
 			return (1);
 		}
 	}
@@ -48,7 +47,7 @@ int	ft_echo(char **tab, char **env)
 		verif = 1;
 		i++;
 	}
-	while(tab[i])
+	while (tab[i])
 	{
 		printf("%s", tab[i]);
 		if ((tab[i + 1] != NULL))
@@ -72,26 +71,41 @@ int	ft_pwd(char **tab, char **env)
 	return (0);
 }
 
-int	ft_cd(char **tab, char **env)
-{
-	char *str;
+// int	ft_cd(char **tab, char **env)
+// {
+// 	char	*str;
 
-	(void)env;
-	if (!tab[0])
-	{
-		dprintf(2, "waf\n");
-		str = getenv("HOME");
-		fprintf(stderr, "{{%s}}\n", str);
-		if (!str)
-			return (perror(tab[0]) , 1);
-		chdir(str);
-		return (0);
-	}
-	if (tab[1])
-		return (fprintf(stderr, "trop d'arguments\n"), 1);
-	if (chdir(tab[0]) == -1)
-		return (perror(tab[0]) , 1);
-	return (0);
+// 	(void)env;
+// 	if (!tab[0])
+// 	{
+// 		str = getenv("HOME");
+// 		if (!str)
+// 			return (perror(tab[0]), 1);
+// 		chdir(str);
+// 		return (0);
+// 	}
+// 	if (tab[1])
+// 		return (fprintf(stderr, "trop d'arguments\n"), 1);
+// 	if (chdir(tab[0]) == -1)
+// 		return (perror(tab[0]), 1);
+// 	return (0);
+// }
+
+int    ft_cd(char **tab, char **env)
+{
+    (void)env;
+	printf("le tab est == %s\n",tab[0]);
+    if (tab[0] && tab[1])
+    {
+        printf("bash: cd: too many arguments\n");
+        return (1);
+    }
+    else if (tab[0] && chdir(tab[0]) == -1)
+    {
+        perror("cd");
+        return (1);
+    }
+    return (0);
 }
 
 // int main(int ac, char **av, char **env)

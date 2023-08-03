@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 20:56:41 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/31 22:36:34 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/02 23:19:46 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 void	ft_compt(char **tab, t_cmd *cmd)
 {
-	int i = -1;
-	int k = 0;
-	int p = 0;
+	int	i;
+	int	k;
+	int	p;
 
+	i = -1;
+	k = 0;
+	p = 0;
 	while (tab[++i])
 	{
 		if (!isaredirection(tab[i]))
@@ -33,11 +36,14 @@ void	ft_compt(char **tab, t_cmd *cmd)
 t_cmd	parse(char *str)
 {
 	static t_cmd	cmd = {0};
-	
+	int				i;
+	int				k;
+	int				p;
+
 	cmd.tab = ft_split(str, ' ');
-	int i = -1;
-	int k = 0;
-	int p = 0;
+	i = -1;
+	k = 0;
+	p = 0;
 	ft_compt(cmd.tab, &cmd);
 	while (cmd.tab[++i])
 	{

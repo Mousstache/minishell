@@ -6,63 +6,19 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 22:02:25 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/04 18:49:13 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/02 23:32:56 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
-
-int		count_hd(char *str)
-{
-	int nb;
-
-	nb = 0;
-	int i = -1;
-	while (str && str[++i])
-	{
-		if (str[i] == '<' && str[i + 1] == '<')
-			nb++;
-	}
-	return (nb);
-}
-
-void	free_heredoc(t_data *data)
-{
-	for (int i = 0; i < data->nbhere; i++)
-		free(data->here[i].delim);
-	if (data->nbhere)
-	{
-		free(data->here);
-		data->here = NULL;
-	}
-}
-
-int		lenmot(char *str)
-{
-	int i = 0;
-	while (str[i] && !ft_isspace(str[i]))
-		i++;
-	return (i);
-}
-
-char	*getmot(char *str)
-{
-	char *new = ft_calloc(lenmot(str) + 1, 1);
-	if (!new)
-		return (NULL);
-	int i = 0;
-	while (str[i] && !ft_isspace(str[i]))
-	{
-		new[i] = str[i];
-		i++;
-	}
-	return (new);
-}
+#include "minishell.h"
 
 void	*delims(t_here *hd, char *str, int max)
 {
-	int i = 0;
-	int j = 0;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
 	while (j < max)
 	{
 		while (ft_isspace(str[i]))
@@ -82,6 +38,7 @@ void	*delims(t_here *hd, char *str, int max)
 	}
 	return (NULL);
 }
+
 static void	exit_hd(int sig)
 {
 	t_data	*data;
@@ -98,15 +55,13 @@ static void	exit_hd(int sig)
 			close(data->here[i].fd[0]);
 			if (data->here[i].delim != NULL)
 				free(data->here[i].delim);
-			printf("JE FREE JE CLOSe\n");
 		}
 		free(data->here);
-		printf("avant %i\n", data->stop);
 		data->stop = true;
-		printf("apres %i\n", data->stop);
 		exit(130);
 	}
 }
+
 void	ctrlc(int sig)
 {
 	if (sig == SIGINT)
@@ -120,9 +75,12 @@ void	ctrlc(int sig)
 
 void	child_process_hd(t_data *data, t_here *here, char *input)
 {
+	char	*str;
+	int		i;
+
+	i = -1;
 	signal(SIGINT, &exit_hd);
-	char *str;
-	for (int i = 0; i < data->nbhere; i++)
+	while (++i < data->nbhere)
 	{
 		while (1)
 		{
@@ -143,6 +101,7 @@ void	child_process_hd(t_data *data, t_here *here, char *input)
 bool	here_doc(t_data *data, char *str)
 {
 	int	i;
+	int	pid;
 
 	i = -1;
 	data->nbhere = count_hd(str);
@@ -153,7 +112,7 @@ bool	here_doc(t_data *data, char *str)
 		return (true);
 	delims(data->here, str, data->nbhere);
 	signal(SIGINT, SIG_IGN);
-	int pid = fork();
+	pid = fork();
 	if (pid == 0)
 	{
 		child_process_hd(data, data->here, str);
@@ -165,6 +124,5 @@ bool	here_doc(t_data *data, char *str)
 	}
 	wait(NULL);
 	signal(SIGINT, &ctrlc);
-	// printf("bool = %i\n", data->stop);
 	return (data->stop);
 }
