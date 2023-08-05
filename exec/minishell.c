@@ -6,27 +6,11 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/03 23:50:32 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/05 21:30:43 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-// int	ft_nofork(t_data *data, t_cmd *cmd, char **env)
-// {
-// 	free(data->pid);
-// 	data->fddup[0] = dup(STDOUT_FILENO);
-// 	data->fddup[1] = dup(STDIN_FILENO);
-// 	if (!openfile(data, cmd))
-// 	{
-// 		ft_is_builtin(cmd, env);
-// 		dupclose(data->fddup);
-// 		return (0);
-// 	}
-// 	dupclose(data->fddup);
-// 	return (0);
-// }
 
 void	exec(t_data *data, t_cmd *cmd, char **env)
 {
@@ -51,9 +35,9 @@ void	exec(t_data *data, t_cmd *cmd, char **env)
 		}
 	}
 	ft_printf("bash: %s: command not found\n", cmd->cmd);
-		free_all(cmd->tab);
-		free(cmd->arg);
-		error_free_exit(data);
+	free_all(cmd->tab);
+	free(cmd->arg);
+	error_free_exit(data);
 }
 
 int		get_pipe(t_data *data, char *file)
@@ -84,7 +68,7 @@ void	parent(t_data *data, int i, char **av)
 	t_cmd	cmd;
 
 	signal(SIGINT, &ctrlc);
-	negatif(av[i]);
+	// negatif(av[i]);
 	cmd = parse(av[i]);
 	forking(data, i, & cmd);
 	if (!cmd.cmd)
@@ -96,13 +80,32 @@ void	parent(t_data *data, int i, char **av)
 	error_free_exit(data);
 }
 
+int		iscmdbuiltin(char *str, t_data *data)
+{
+	data->onecmd = parse(str);
+	if (is_builtin(data->onecmd.arg, data->envi))
+		return (1);
+	free_all(data->onecmd.tab);
+	free(data->onecmd.arg);
+	free(data->onecmd.files);
+	free(data->onecmd.redir);
+	return (0);
+}
+
 void	process(t_data *data, char **av)
 {
 	int	i;
 
 	i = -1;
-	// if (data->nbcmd == 1 && get_cmd(data))
-	// 	return (ft_nofork(data, data->onecmd, env), NULL);
+	if (data->nbcmd == 1 && iscmdbuiltin(data->tab[0], data))
+	{
+		ex_builtin(data->onecmd.arg, data->envi);
+		free_all(data->onecmd.tab);
+		free(data->onecmd.arg);
+		free(data->onecmd.files);
+		free(data->onecmd.redir);
+		return ;
+	}
 	while (++i < data->nbcmd)
 	{
 		pipe(data->fd);

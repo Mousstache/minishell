@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 22:02:25 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/02 23:32:56 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/04 20:00:43 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ bool	here_doc(t_data *data, char *str)
 		while (++i < data->nbhere)
 			close(data->here[i].fd[1]);
 	}
-	wait(NULL);
+	waitpid(pid, NULL, 0);
 	signal(SIGINT, &ctrlc);
 	return (data->stop);
 }

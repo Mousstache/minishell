@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 22:30:43 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/03 23:49:59 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/05 23:23:23 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,20 @@ typedef struct s_env
 	char	*var_value;
 }	t_env;
 
+typedef struct s_cmd
+{
+	char	**arg;
+	char	*cmd;
+	int		*redir;
+	char	**tab;
+	char	**files;
+}	t_cmd;
+
 typedef struct s_data
 {
+	char	**env_copy;
+	char	*var_name;
+	char	*var_value;
 	char	**path;
 	char	**envi;
 	char	**cmd;
@@ -52,25 +64,17 @@ typedef struct s_data
 	int		*pid;
 	char	**tab;
 	int		fd[2];
-	// int		fddup[2];
+	int		fddup[2];
 	t_here	*here;
-	// t_cmd	*onecmd;
-	t_env	*env;
+	t_cmd	cmds;
+	// t_env	*env;
 	int		nbhere;
 	bool	stop;
 	int		bool_s;
 	int		bool_d;
+
+	t_cmd	onecmd;
 }	t_data;
-
-typedef struct s_cmd
-{
-	char	**arg;
-	char	*cmd;
-	int		*redir;
-	char	**tab;
-	char	**files;
-}	t_cmd;
-
 
 // env
 int		is_alphanum(char c);
@@ -79,13 +83,22 @@ void	free_all(char **tab);
 int		is_alpha(char c);
 int		count_in_var(char *str);
 int		ex_builtin(char **arg, char **env);
-char	*ft_expand(char *str, t_env *env);
+char	*ft_expand(char *str, t_data *env);
+int		count_quotes(char *str);
 char	**create_env(char **env);
+char	*ft_strjoin_quote(char *s1, char *s2, char c);
+char	*ft_strjoin_alphanum(char *s1, char *s2);
+char	*ft_strjoin_btw_quote(char *s1, char *s2);
+char	*strjoin_value_var(char *str, int j, t_data *env);
 char	*ft_strjoin2(char *s1, char *s2);
+int		count_between_quotes(char *str, char c);
+int		char_var_correct(char *str);
+int		check_var_exist(char **env, char *variable);
 int		count_var_len(char *str);
 
 // builtin
-char	**ft_unset(char **env, char *variable);
+int		ft_export(t_data *env, char *str);
+int		ft_unset(char ***env, char **variable);
 int		ft_cd(char **tab, char **env);
 int		ft_echo(char **tab, char **env);
 int		ft_pwd(char **tab, char **env);

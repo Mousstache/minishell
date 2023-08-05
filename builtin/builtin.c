@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 18:55:40 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/03 22:01:50 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/05 22:54:50 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,18 +94,26 @@ int	ft_pwd(char **tab, char **env)
 int    ft_cd(char **tab, char **env)
 {
     (void)env;
-	printf("le tab est == %s\n",tab[0]);
     if (tab[0] && tab[1])
     {
         printf("bash: cd: too many arguments\n");
         return (1);
     }
-    else if (tab[0] && chdir(tab[0]) == -1)
+    if (tab[0] && chdir(tab[0]) == -1)
     {
         perror("cd");
         return (1);
     }
     return (0);
+}
+
+void    ft_env(char **str)
+{
+    int i;
+
+    i = 0;
+    while (str && str[i])
+        ft_printf("%s\n", str[i++]);
 }
 
 // int main(int ac, char **av, char **env)

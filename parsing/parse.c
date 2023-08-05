@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 20:56:41 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/03 23:51:30 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/05 23:53:00 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,40 @@ void	ft_compt(char **tab, t_cmd *cmd)
 	cmd->redir = calloc(sizeof(int), p + 1);
 }
 
+void	printstruct(t_cmd *cmds)
+{
+	for (int i = 0; cmds->arg[i]; i++)
+	{
+		if (i == 0)
+		{
+			fprintf(stderr, "CMD = {%s}\n", cmds->arg[0]);
+			continue ;
+		}
+		if (i == 1)
+			fprintf(stderr, "ARGS =");
+		fprintf(stderr, "[%s]", cmds->arg[i]);
+	}
+	fprintf(stderr, "\n");
+	// ft_printlist(cmds->lst);
+}
+void	*delete_quotes(char *str);
+
+void positif(char **tab)
+{
+	for (int i = 0; tab[i]; i++)
+	{
+		for (int j = 0; tab[i][j]; j++)
+		{
+			if (tab[i][j] == '\'' || tab[i][j] == '"')
+			{
+				char c = tab[i][j++];
+				while (tab[i][j] != c)
+					tab[i][j++] *= -1;
+			}
+		}
+	}
+}
+
 t_cmd	parse(char *str)
 {
 	static t_cmd	cmd = {0};
@@ -49,7 +83,8 @@ t_cmd	parse(char *str)
 	{
 		if (!isaredirection(cmd.tab[i]))
 		{
-			cmd.arg[k++] = cmd.tab[i];
+			cmd.arg[k++] = delete_quotes(cmd.tab[i]);
+			// cmd.arg[k++] = cmd.tab[i];
 		}
 		else
 		{
@@ -57,7 +92,10 @@ t_cmd	parse(char *str)
 			cmd.files[p++] = cmd.tab[++i];
 		}
 	}
-	cmd.cmd = cmd.arg[0];
+	for (int z = 0; cmd.arg[z]; z++)
+		negatif(cmd.arg[z]);
+	cmd.cmd = &*&*cmd.arg[0];
+	printstruct(&cmd);
 	return (cmd);
 }
 

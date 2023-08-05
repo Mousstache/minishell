@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 15:47:03 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/02 22:30:34 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/05 20:40:48 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s1, char const *set);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
-int					ft_strcmp(char *s1, char *s2);
+int					ft_strcmp(char const *s1, char const *s2);
 void				ft_putstr_e(char *str);
 
 // rest
