@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 18:55:40 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 22:54:50 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/06 19:30:13 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	is_opt(char *str)
 	return (0);
 }
 
-int	ft_echo(char **tab, char **env)
+int	ft_echo(char ***env, char **tab)
 {
 	int	i;
 	int	verif;
@@ -59,7 +59,7 @@ int	ft_echo(char **tab, char **env)
 	return (0);
 }
 
-int	ft_pwd(char **tab, char **env)
+int	ft_pwd(char ***env, char **tab)
 {
 	char	path[PATH_MAX];
 
@@ -71,7 +71,7 @@ int	ft_pwd(char **tab, char **env)
 	return (0);
 }
 
-// int	ft_cd(char **tab, char **env)
+// int	ft_cd(char ***env, char **tab)
 // {
 // 	char	*str;
 
@@ -91,7 +91,7 @@ int	ft_pwd(char **tab, char **env)
 // 	return (0);
 // }
 
-int    ft_cd(char **tab, char **env)
+int    ft_cd(char ***env, char **tab)
 {
     (void)env;
     if (tab[0] && tab[1])
@@ -107,13 +107,20 @@ int    ft_cd(char **tab, char **env)
     return (0);
 }
 
-void    ft_env(char **str)
+int   ft_env(char ***env, char **str)
 {
-    int i;
-
-    i = 0;
-    while (str && str[i])
-        ft_printf("%s\n", str[i++]);
+	(void)str;
+	int i;
+	int size;
+	char	**tab;
+	
+	i = 0;
+	tab = *env;
+	size = count_string(tab);
+	printf("size >>>>>>>>>>>>>>>>>>>>>>>>>>>>%d\n", size);
+	while (i < size)
+		ft_printf("%s\n", tab[i++]);
+	return (0);
 }
 
 // int main(int ac, char **av, char **env)

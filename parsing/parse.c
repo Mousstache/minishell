@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 20:56:41 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 23:53:00 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/06 20:21:40 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,8 @@ t_cmd	parse(char *str)
 	return (cmd);
 }
 
-void	init(t_data *data, char **env)
+void	init(t_data *data)
 {
-	data->envi = env;
 	data->prev_pipe = -1;
 	data->fd[0] = -1;
 	data->fd[1] = -1;

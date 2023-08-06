@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 19:46:00 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 23:23:43 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/06 21:25:24 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	is_builtin(char **arg, char **env)
 	i = -1;
 	while (tab[++i])
 	{
+		printf("%s|%s\n", tab[i], cmd);
 		if (!ft_strcmp(cmd ,tab[i]))
 		{
 			return (1);
@@ -31,13 +32,24 @@ int	is_builtin(char **arg, char **env)
 	
 }
 
-typedef int (*func)(char **, char **);
-
-int	ex_builtin(char **arg, char **env)
+void	ft_printtab(char **str)
 {
-	(void)env;
-	static char	*tab[5] = {"cd", "echo", "pwd", NULL};
-	static func fonction[4] = {ft_cd, ft_echo, ft_pwd};
+	int i;
+	
+	i = 0;
+	while (str[i])
+	{
+		ft_printf("%s\n", str[i]);
+		i++;
+	}
+}
+
+typedef int (*func)(char ***, char **);
+
+int	ex_builtin(char **arg, char ***env)
+{
+	static char	*tab[7] = {"cd", "echo", "pwd", "export", "unset", "env", NULL};
+	static func fonction[6] = {ft_cd, ft_echo, ft_pwd, ft_export, ft_unset, ft_env};
 	int i;
 
 	i = -1;
@@ -45,10 +57,17 @@ int	ex_builtin(char **arg, char **env)
 	{
 		if (!ft_strcmp(arg[0] ,tab[i]))
 		{
-			fonction[i](++arg, env);
+			/*if(!ft_strcmp("env" ,tab[i]))
+			{
+				printf("ENV addr value: %p\n", *env);
+				exit(0);
+			}*/
+
+			fonction[i](env, ++arg);
 			return (1);
 		}
 	}
+
 	return (0);
 	
 }

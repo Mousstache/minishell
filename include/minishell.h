@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 22:30:43 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 23:23:23 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/06 20:21:47 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int		count_string(char **env);
 void	free_all(char **tab);
 int		is_alpha(char c);
 int		count_in_var(char *str);
-int		ex_builtin(char **arg, char **env);
+int		ex_builtin(char **arg, char ***env);
 char	*ft_expand(char *str, t_data *env);
 int		count_quotes(char *str);
 char	**create_env(char **env);
@@ -97,12 +97,12 @@ int		check_var_exist(char **env, char *variable);
 int		count_var_len(char *str);
 
 // builtin
-int		ft_export(t_data *env, char *str);
+int		ft_export(char ***env, char **str);
 int		ft_unset(char ***env, char **variable);
-int		ft_cd(char **tab, char **env);
-int		ft_echo(char **tab, char **env);
-int		ft_pwd(char **tab, char **env);
-void	ft_env(char **str);
+int		ft_cd(char ***env, char **tab);
+int		ft_echo(char ***env, char **tab);
+int		ft_pwd(char ***env, char **tab);
+int		ft_env(char ***env, char **str);
 
 // here_doc
 char	*getmot(char *str);
@@ -133,7 +133,7 @@ char	*addspace(char *str);
 int		syntax(char *str);
 t_cmd	parse(char *str);
 int		is_builtin(char **arg, char **env);
-void	init(t_data *data, char **env);
+void	init(t_data *data);
 void	openfiles(t_data *data, t_cmd *cmd);
 int		get_pipe(t_data *data, char *file);
 void	ft_compt(char **tab, t_cmd *cmd);

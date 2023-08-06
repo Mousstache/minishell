@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 23:25:28 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 23:34:30 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/06 20:58:31 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	main(int ac, char **av, char **env)
 		return 1;
 	data = starton();
 	data->envi = create_env(env);
+	printf("\n\n\nEnv value adress: %p\n\n\n", data->envi);
+	printf("\n\n\nEnv adress: %p\n\n\n", &data->envi);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &ctrlc);
 	(void)av;
@@ -56,10 +58,11 @@ int	main(int ac, char **av, char **env)
 		data->nbcmd = ft_strtab(input, '|');
 		if (here_doc(data, input))
 			continue ;
-		init(data, env);
+		init(data);
 		data->tab = ft_split(input, '|');
 		free(input);
 		process(data, data->tab);
+		printf("Env adress: %p\n", data->envi);
 		free_all(data->path);
 		free_all(data->tab);
 		free(data->pid);

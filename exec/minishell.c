@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 21:30:43 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/06 21:36:54 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	parent(t_data *data, int i, char **av)
 	forking(data, i, & cmd);
 	if (!cmd.cmd)
 		exit(0);
-	if (!ex_builtin(cmd.arg, data->envi))
+	if (!ex_builtin(cmd.arg, &data->envi))
 		exec(data, & cmd, data->envi);
 	free_all(cmd.tab);
 	free(cmd.arg);
@@ -83,6 +83,8 @@ void	parent(t_data *data, int i, char **av)
 int		iscmdbuiltin(char *str, t_data *data)
 {
 	data->onecmd = parse(str);
+	if (!data->onecmd.cmd)
+		return (0);
 	if (is_builtin(data->onecmd.arg, data->envi))
 		return (1);
 	free_all(data->onecmd.tab);
@@ -99,7 +101,8 @@ void	process(t_data *data, char **av)
 	i = -1;
 	if (data->nbcmd == 1 && iscmdbuiltin(data->tab[0], data))
 	{
-		ex_builtin(data->onecmd.arg, data->envi);
+		printf("================================================\n");
+		ex_builtin(data->onecmd.arg, &data->envi);
 		free_all(data->onecmd.tab);
 		free(data->onecmd.arg);
 		free(data->onecmd.files);
