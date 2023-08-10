@@ -6,13 +6,13 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 23:15:13 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 23:53:07 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 19:12:08 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	*delete_quotes(char *str)
+char	*delete_quotes(char *str)
 {
 	int		i;
 	int		j;
@@ -31,8 +31,7 @@ void	*delete_quotes(char *str)
 			res[j++] = str[i++];
 	}
 	res[j] = 0;
-	// if (str)
-	// free(str);
+	free(str);
 	str = res;
 	return (res);
 }

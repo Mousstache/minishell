@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 22:53:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/06 21:15:27 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 22:22:48 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,18 @@ int		ft_unset(char ***env, char **var)
 	j = 0;
 	int z = -1;
 	new = ft_calloc((count_string(*env) + 1), sizeof(char *));
-	printf("%d\n", count_string(*env));
+	// printf("%d\n", count_string(*env));
 	if (!new)
 		return (-1);
 	while (var[++z])
 	{
-		printf("Value: %s\n" ,(*env)[++i]);
+		// printf("Value: %s\n" ,(*env)[++i]);
 		while ((*env)[++i])
 		{
 			k = -1;
 			if (!strncmp((*env)[i], var[z], ft_strlen(var[z])))
 				i++;
-			printf("Env[%d]: %s, var : %s \n",i,  (*env)[i], var[z]);
+			// printf("Env[%d]: %s, var : %s \n",i,  (*env)[i], var[z]);
 			if ((*env)[i])
 			{
 				new[j] = ft_calloc((ft_strlen((*env)[i]) + 1), sizeof(char));
@@ -47,8 +47,8 @@ int		ft_unset(char ***env, char **var)
 			j++;
 		}
 	}
-	printf("Count string: %d\n", count_string(new));
-	printf("Print the current env \n");
+	// printf("Count string: %d\n", count_string(new));
+	// printf("Print the current env \n");
 	ft_env(&new, NULL);
 	free_all(*env);
 	*env = new;
@@ -161,10 +161,10 @@ int    ft_export(char ***env, char **str)
                 envv.var_value[j++] = str[k][i++];
             envv.var_value[j] = 0;
 			// free_all(*env);
-			printf("\n\n\n\nNew env adress: %p\n\n\n\n", *env);
+			// printf("\n\n\n\nNew env adress: %p\n\n\n\n", *env);
 			*env = add_variable(&envv);
-			ft_env(env, NULL);
-			printf("\n\n\n\nNew env adress: %p\n\n\n\n", *env);
+			// ft_env(env, NULL);
+			// printf("\n\n\n\nNew env adress: %p\n\n\n\n", *env);
 		}
     }
     return (res);

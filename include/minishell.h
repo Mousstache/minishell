@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 22:30:43 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/06 20:21:47 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 19:31:52 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,13 @@ typedef struct s_data
 	int		bool_s;
 	int		bool_d;
 
+	int		status;
 	t_cmd	onecmd;
 }	t_data;
 
 // env
+char	*positif(char *str);
+char	*delete_quotes(char *str);
 int		is_alphanum(char c);
 int		count_string(char **env);
 void	free_all(char **tab);
@@ -111,11 +114,12 @@ void	free_heredoc(t_data *data);
 bool	here_doc(t_data *data, char *str);
 
 //exec
-int	ft_strtab(char *str, char c);
+int		ft_strtab(char *str, char c);
 void	process(t_data *data, char **av);
 void	free_all(char **tab);
 char	*ft_gnl(int fd, int boolean);
-void	error_free_exit(t_data *data);
+void	slash(int sig);
+void	error_free_exit(t_data *data, int status);
 void	ft_printtab(char **tab);
 char	**path_finder(char **env);
 void	dup_close(int fd, int fd2);

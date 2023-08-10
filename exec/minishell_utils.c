@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 21:39:02 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/31 22:56:31 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 22:24:39 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,19 @@
 void	waiting(t_data *data)
 {
 	int	i;
+	int	var;
 
 	i = -1;
+	var = 0;
 	while (++i < data->nbcmd)
-		waitpid(data->pid[i], NULL, 0);
+	{
+		waitpid(data->pid[i], &data->status, 0);
+		if (WIFEXITED(data->status))
+			data->status = WEXITSTATUS(data->status);
+		if (data->status == 131 && !var++)
+			ft_printf("Quit (core dumped)\n");
+	}
+	// fprintf(stderr, "STATUS = %i\n", data->status);
 }
 
 void	safe_close(int fd)
@@ -28,7 +37,7 @@ void	safe_close(int fd)
 	fd = -1;
 }
 
-void	error_free_exit(t_data *data)
+void	error_free_exit(t_data *data, int status)
 {
 	if (data->prev_pipe != -1)
 		safe_close(data->prev_pipe);
@@ -39,7 +48,7 @@ void	error_free_exit(t_data *data)
 	free_all(data->path);
 	free_all(data->tab);
 	free(data->pid);
-	exit(EXIT_FAILURE);
+	exit(status);
 }
 
 char	**path_finder(char **env)

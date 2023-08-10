@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 22:00:32 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/31 22:55:34 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 19:29:37 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	openfiles(t_data *data, t_cmd *cmd)
 		if (cmd->redir[i] == 4)
 			fd = get_pipe(data, cmd->files[i]);
 		if (fd == -1)
-			error_free_exit(data);
+			error_free_exit(data, 1);
 		if (cmd->redir[i] == 1 || cmd->redir[i] == 2)
 			dup_close(fd, STDOUT_FILENO);
 		else if (cmd->redir[i] == 3)

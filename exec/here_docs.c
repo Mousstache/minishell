@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 22:02:25 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/04 20:00:43 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 19:31:12 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,14 @@ static void	exit_hd(int sig)
 		data->stop = true;
 		exit(130);
 	}
+}
+
+void	slash(int sig)
+{
+	if (sig == SIGQUIT)
+		exit(131);
+	if (sig == SIGINT)
+		exit(130);
 }
 
 void	ctrlc(int sig)

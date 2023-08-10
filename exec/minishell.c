@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 17:14:30 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/06 21:36:54 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 22:14:42 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	exec(t_data *data, t_cmd *cmd, char **env)
 	ft_printf("bash: %s: command not found\n", cmd->cmd);
 	free_all(cmd->tab);
 	free(cmd->arg);
-	error_free_exit(data);
+	error_free_exit(data, 127);
 }
 
 int		get_pipe(t_data *data, char *file)
@@ -68,6 +68,7 @@ void	parent(t_data *data, int i, char **av)
 	t_cmd	cmd;
 
 	signal(SIGINT, &ctrlc);
+	signal(SIGQUIT, &slash);
 	// negatif(av[i]);
 	cmd = parse(av[i]);
 	forking(data, i, & cmd);
@@ -77,11 +78,16 @@ void	parent(t_data *data, int i, char **av)
 		exec(data, & cmd, data->envi);
 	free_all(cmd.tab);
 	free(cmd.arg);
-	error_free_exit(data);
+	error_free_exit(data, 127);
 }
 
 int		iscmdbuiltin(char *str, t_data *data)
 {
+	if (!str)
+	{
+		ft_printf("command not found\n");
+		return (0);
+	}
 	data->onecmd = parse(str);
 	if (!data->onecmd.cmd)
 		return (0);
@@ -101,7 +107,7 @@ void	process(t_data *data, char **av)
 	i = -1;
 	if (data->nbcmd == 1 && iscmdbuiltin(data->tab[0], data))
 	{
-		printf("================================================\n");
+		// printf("================================================\n");
 		ex_builtin(data->onecmd.arg, &data->envi);
 		free_all(data->onecmd.tab);
 		free(data->onecmd.arg);
@@ -115,7 +121,7 @@ void	process(t_data *data, char **av)
 		signal(SIGINT, SIG_IGN);
 		data->pid[i] = fork();
 		if (data->pid[i] < 0)
-			error_free_exit(data);
+			error_free_exit(data, 1);
 		else if (data->pid[i] == 0)
 			parent(data, i, av);
 		else

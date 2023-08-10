@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 18:55:40 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/06 19:30:13 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 22:33:04 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ int	ft_echo(char ***env, char **tab)
 
 	i = 0;
 	verif = 0;
+	if (!tab[0])
+	{
+		ft_printf("\n");
+		return (0);
+	}
 	(void)env;
 	while (is_opt(tab[i]) == 1)
 	{

@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 23:46:55 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 22:48:04 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 19:39:24 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ int	check_var_exist(char **env, char *variable)
 		return (-1);
 	while (env[i])
 	{
-		if (strncmp(env[i], variable, count_var_len(variable)) == 0)
+		if (!ft_strncmp(env[i], variable, ft_strlen(variable)))
 			return (i);
 		i++;
 	}
-	return (-1);
+	return (-50);
 }

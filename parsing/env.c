@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 22:57:02 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/06 21:36:00 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 19:37:38 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ char	*ft_expand(char *str, t_data *env)
 		{
 			i++;
 			j = check_var_exist(env->env_copy, str + i);
+			printf("j = %i\n", j);
 			if (j >= 0)
 				new = strjoin_value_var(new, j, env);
 			i += count_var_len(str + i);

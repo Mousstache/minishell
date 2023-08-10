@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 22:46:31 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/05 23:12:29 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/08 22:46:42 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,3 +172,13 @@ char	*ft_strjoin_quote(char *s1, char *s2, char c)
 // 		free(s2);
 // 	return (res);
 // }
+
+
+/*
+
+str[i] | new[n]
+ls 1 $AVION $USER
+ls 1 \0
+
+
+*/

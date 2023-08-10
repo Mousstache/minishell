@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 19:46:00 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/06 21:25:24 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 22:20:56 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	is_builtin(char **arg, char **env)
 	i = -1;
 	while (tab[++i])
 	{
-		printf("%s|%s\n", tab[i], cmd);
+		// printf("%s|%s\n", tab[i], cmd);
 		if (!ft_strcmp(cmd ,tab[i]))
 		{
 			return (1);
@@ -57,12 +57,6 @@ int	ex_builtin(char **arg, char ***env)
 	{
 		if (!ft_strcmp(arg[0] ,tab[i]))
 		{
-			/*if(!ft_strcmp("env" ,tab[i]))
-			{
-				printf("ENV addr value: %p\n", *env);
-				exit(0);
-			}*/
-
 			fonction[i](env, ++arg);
 			return (1);
 		}

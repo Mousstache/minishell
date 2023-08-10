@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 23:25:28 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/06 20:58:31 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 22:21:19 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ int	valid_syntax(char **input, t_data *data)
 		return (ft_printf("syntax error\n"), free(*input), 1);
 	data->var_name = NULL;
 	data->var_value = NULL;
+	// printf("AVANT [%s]\n", *input);
 	*input = ft_expand(*input, data);
+	// printf("APRES [%s]\n", *input);
 	return (0);
 }
 
@@ -35,8 +37,7 @@ int	main(int ac, char **av, char **env)
 		return 1;
 	data = starton();
 	data->envi = create_env(env);
-	printf("\n\n\nEnv value adress: %p\n\n\n", data->envi);
-	printf("\n\n\nEnv adress: %p\n\n\n", &data->envi);
+	data->env_copy = data->envi;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &ctrlc);
 	(void)av;
@@ -54,6 +55,8 @@ int	main(int ac, char **av, char **env)
 		if (valid_syntax(&input, data))
 			continue ;
 		negatif(input);
+		input = delete_quotes(input);
+		// char s[2] = "\0";
 		input = addspace(input);
 		data->nbcmd = ft_strtab(input, '|');
 		if (here_doc(data, input))
@@ -62,7 +65,6 @@ int	main(int ac, char **av, char **env)
 		data->tab = ft_split(input, '|');
 		free(input);
 		process(data, data->tab);
-		printf("Env adress: %p\n", data->envi);
 		free_all(data->path);
 		free_all(data->tab);
 		free(data->pid);

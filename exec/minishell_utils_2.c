@@ -6,7 +6,7 @@
 /*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 18:36:56 by motroian          #+#    #+#             */
-/*   Updated: 2023/07/31 22:10:32 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/07 22:17:14 by motroian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,5 @@ void	free_all(char **tab)
 void	message(t_data *data)
 {
 	perror("bash");
-	error_free_exit(data);
+	error_free_exit(data, data->status);
 }
