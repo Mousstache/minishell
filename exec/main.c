@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 23:25:28 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/07 22:21:19 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/12 03:38:06 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	valid_syntax(char **input, t_data *data)
+int	valid_syntax(char *input, t_data *data)
 {
-	if (quotes(*input))
-		return (ft_printf("quote fail\n"), free(*input), 1);
-	if (syntax(*input))
-		return (ft_printf("syntax error\n"), free(*input), 1);
+	if (quotes(input))
+		return (ft_printf("quote fail\n"), free(input), 1);
+	if (syntax(input))
+		return (ft_printf("syntax error\n"), free(input), 1);
 	data->var_name = NULL;
 	data->var_value = NULL;
 	// printf("AVANT [%s]\n", *input);
-	*input = ft_expand(*input, data);
 	// printf("APRES [%s]\n", *input);
 	return (0);
 }
@@ -52,8 +51,9 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		add_history(input);
-		if (valid_syntax(&input, data))
+		if (valid_syntax(input, data))
 			continue ;
+		input = ft_expandd(input, data);		
 		negatif(input);
 		input = delete_quotes(input);
 		// char s[2] = "\0";

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: motroian <motroian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 22:30:43 by motroian          #+#    #+#             */
-/*   Updated: 2023/08/07 19:31:52 by motroian         ###   ########.fr       */
+/*   Updated: 2023/08/12 03:37:29 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,5 +141,13 @@ void	init(t_data *data);
 void	openfiles(t_data *data, t_cmd *cmd);
 int		get_pipe(t_data *data, char *file);
 void	ft_compt(char **tab, t_cmd *cmd);
+
+
+// expand
+char	*ft_expandd(char *str, t_data *env);
+int	count_expand(char *str, t_data *env);
+int	copy_squote(char *str, char *new, int *i, int *n);
+void	ft_strcat(char *dst, const char *src, int *n);
+char	*expand_ok(char *str, t_data *env, int *clef);
 
 #endif

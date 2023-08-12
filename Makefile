@@ -1,5 +1,5 @@
 SRCS = $(addprefix exec/, main.c minishell_utils.c here_docs.c minishell.c minishell_utils_2.c addspace.c exec_utils.c here_docs2.c )\
-		$(addprefix parsing/, valid.c parse.c  utils_env.c env.c strjoin.c utils_env_2.c) \
+		$(addprefix parsing/, valid.c parse.c  utils_env.c env.c strjoin.c utils_env_2.c expand.c count_expand.c) \
 		$(addprefix builtin/, builtin.c is_builtin.c env_built.c) \
 
 NAME = minishell
