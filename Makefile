@@ -1,45 +1,109 @@
-SRCS = $(addprefix exec/, main.c minishell_utils.c here_docs.c minishell.c minishell_utils_2.c addspace.c exec_utils.c here_docs2.c )\
-		$(addprefix parsing/, valid.c parse.c  utils_env.c env.c strjoin.c utils_env_2.c expand.c count_expand.c) \
-		$(addprefix builtin/, builtin.c is_builtin.c env_built.c) \
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: motroian <motroian@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/02/03 00:22:02 by maheraul          #+#    #+#              #
+#    Updated: 2023/08/30 21:31:24 by motroian         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-NAME = minishell
+NAME			=	minishell
 
-INC = -Iinclude
+LIBFT			=	libft.a
 
-FLAGS = -g3 -Wall -Werror -Wextra
+PRINTF			=	libftprintf.a
 
-OBJS = ${SRCS:.c=.o}
+DIR_SRCS		=	srcs
 
-LIBFT = libft.a
+DIR_OBJS		=	objs
 
-${NAME} : ${OBJS} ${LIBFT}
-			make -C libft/ all
-			mv libft/libft.a ./
-			cc ${FLAGS} ${INC} $(OBJS) -o $(NAME) libft.a -lreadline
+SRCS_NAMES		=	main.c \
+					heredoc/heredoc.c \
+					heredoc/here_doc2.c \
+					builtin/builtin.c \
+					builtin/export.c \
+					builtin/unset.c \
+					builtin/cd.c \
+					builtin/env.c \
+					builtin/echo.c \
+					builtin/pwd.c \
+					builtin/exit.c \
+					builtin/exit_fork.c\
+					exec/fill_cmd_struct.c \
+					exec/minishell.c \
+					exec/exec.c \
+					exec/redirection.c \
+					exec/redir_nofork.c \
+					exec/signaux.c \
+					free/free.c \
+					utils/lst.c \
+					utils/init.c \
+					utils/utils.c \
+					parsing/env.c \
+					parsing/syntax.c\
+					parsing/parse.c \
+					parsing/parse_input.c \
+					parsing/parse_input2.c \
+					parsing/strjoin.c \
+					parsing/utils_env_2.c \
+					parsing/utils_env.c \
+					parsing/valid.c \
+					parsing/count_expand.c \
+					parsing/negatif.c \
+					parsing/expand.c
 
-${LIBFT}:
-	make -C libft/ all
-	mv libft/libft.a ./
+OBJS_NAMES		=	${SRCS_NAMES:.c=.o}
 
-all : ${NAME}
+DEPS			=	${SRCS_NAMES:.c=.d}
 
-%.o:%.c
-		cc ${FLAGS} ${INC}  -c $< -o $@
+INC				=	-Iincludes -Ilibs/libft -Ilibs/ft_printf
 
-leaks: $(NAME)
-	valgrind --suppressions=suppressions.txt --leak-check=full --show-leak-kinds=all --track-fds=yes   ./minishell
+SRCS			=	$(addprefix $(DIR_SRCS)/,$(SRCS_NAMES))
 
-clean :
-		make -C ./libft/ clean
-		rm -rf ${OBJS}
+OBJS			=	$(addprefix $(DIR_OBJS)/,$(OBJS_NAMES))
 
-fclean : clean
-		rm -rf ${NAME} ${LIBFT}
-		make -C ./libft/ fclean
+HEAD			=	-Iincludes -lreadline
 
-re : fclean all
+CC				=	cc
 
-.PHONY : all  clean fclean re libft NAME 
+CFLAGS			=	-Iincludes -Ilibs/ft_printf -Ilibs/libft -g3 -Wall -Werror -Wextra
 
+all				:	${NAME}
 
+$(NAME): $(DIR_OBJS) $(OBJS)
+	@make -C libs/libft
+	@make -C libs/ft_printf
+	@mv libs/libft/libft.a .
+	@mv libs/ft_printf/libftprintf.a .
+	cc $(HEAD) $(OBJS) ${LIBFT} ${PRINTF} -o $(NAME)
 
+$(OBJS) : $(DIR_OBJS)/%.o : $(DIR_SRCS)/%.c
+	$(CC) -g3 $(CFLAGS) $(INC) -c $< -o $@
+
+$(DIR_OBJS):
+	mkdir -p $(DIR_OBJS)
+	mkdir -p objs/builtin
+	mkdir -p objs/parsing
+	mkdir -p objs/exec
+	mkdir -p objs/free
+	mkdir -p objs/utils
+	mkdir -p objs/heredoc
+
+clean			:
+					make clean -C libs/libft
+					make clean -C libs/ft_printf
+					rm -rf ${OBJS} $(DIR_OBJS)
+
+fclean			:	clean
+					make fclean -C libs/libft
+					make fclean -C libs/ft_printf
+					rm -rf ${LIBFT}
+					rm -rf ${PRINTF}
+					rm -rf ${NAME}
+
+re				:	fclean all
+
+.PHONY			:	all clean fclean re
